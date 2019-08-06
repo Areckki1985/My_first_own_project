@@ -1,0 +1,17 @@
+
+{% extends 'base.html' %}
+
+{% block b %}
+    {% if form %}
+    <form action="/add_exercise/" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Wyślij">
+
+  </form>
+    {% endif %}
+<br>
+    {{ message }}
+
+{% endblock %}
+

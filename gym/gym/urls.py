@@ -15,7 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls import url
+
+from training.views import AddGymExerciseView, AddMainPlanView, AddPartialPlanView, ShowMainPlanView, AddWeekView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    url(r'^add_exercise/', AddGymExerciseView.as_view()),
+    url(r'^add_main_plan/', AddMainPlanView.as_view()),
+    url(r'^add_partial_plan/', AddPartialPlanView.as_view()),
+    url(r'^show_plan/(?P<id>(\d)+)/', ShowMainPlanView.as_view()),
+    url(r'^add_week/(?P<plan_id>(\d)+)/(?P<exercise_id>(\d)+)/(?P<partial_plan_id>(\d)+)/', AddWeekView.as_view()),
 ]

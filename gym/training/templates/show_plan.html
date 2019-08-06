@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% block b %}
+<br>
+    <font size="+2">{{ plan }}</font> <br><br>
+     {% for partial_plan in partial_plans %}
+       <strong> {{ partial_plan.name }} </strong>  <br><br>
+         <table>
+
+         {% for exercise in partial_plan.exercises.all %}
+
+             <a href="/add_week/{{ plan.id }}/{{ exercise.id }}/{{ partial_plan.id }} ">{{ exercise.name }}</a>
+
+             {% for week in weeks %}
+
+                 {% if week.exercise_id == exercise.id and week.partial_plan_id == partial_plan.id %}
+
+                   <strong>{{ week.name }}</strong>
+
+
+                     Ilość Serii: {{ week.how_many_series }}
+
+
+                     {% for series in series %}
+
+                         {% if series.week_id == week.id %}
+
+                              Ilość powtórzeń: {{ series.reps }}
+
+                                Obciążenie: {{ series.load }}
+
+                         {% endif %}
+                        {% endfor %}
+                 {% endif %}
+             {% endfor %}
+            </table>
+               <br>
+             {%  endfor %}
+    {% endfor %}
+
+
+{% endblock %}
+
+
+<table>
+  <tr>
+    <th rowspan="12"></th>
+    <th colspan="2"></th>
+    <th colspan="2"></th>
+    <th colspan="2"></th>
+    <th colspan="2"></th>
+    <th colspan="2"></th>
+  </tr>
+  <tr>
+    <td colspan="2"></td>
+    <td colspan="2"></td>
+    <td colspan="2"></td>
+    <td colspan="2"></td>
+    <td colspan="2"></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
