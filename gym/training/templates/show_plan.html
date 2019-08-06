@@ -3,179 +3,51 @@
 {% block b %}
 <br>
     <font size="+2">{{ plan }}</font> <br><br>
+
      {% for partial_plan in partial_plans %}
+
+
        <strong> {{ partial_plan.name }} </strong>  <br><br>
-         <table>
-
          {% for exercise in partial_plan.exercises.all %}
+            <table border="3">
+                <tr>
+                    <td><a href="/add_week/{{ plan.id }}/{{ exercise.id }}/{{ partial_plan.id }} ">{{ exercise.name }}</a> </td>
 
-             <a href="/add_week/{{ plan.id }}/{{ exercise.id }}/{{ partial_plan.id }} ">{{ exercise.name }}</a>
-
-             {% for week in weeks %}
-
-                 {% if week.exercise_id == exercise.id and week.partial_plan_id == partial_plan.id %}
-
-                   <strong>{{ week.name }}</strong>
+                    {% for week in weeks %}
 
 
-                     Ilość Serii: {{ week.how_many_series }}
+                         {% if week.exercise_id == exercise.id and week.partial_plan_id == partial_plan.id %}
+                             <td>
 
 
-                     {% for series in series %}
 
-                         {% if series.week_id == week.id %}
 
-                              Ilość powtórzeń: {{ series.reps }}
+                                <strong>{{ week.name }}</strong>
+                                Ilość Serii: {{ week.how_many_series }}
+                                 {% for series in series %}
+                                    {% if series.week_id == week.id %}
+                                        Ilość powtórzeń: {{ series.reps }}
+                                        Obciążenie: {{ series.load }}
+                                    {% endif %}
+                                {% endfor %}
 
-                                Obciążenie: {{ series.load }}
 
-                         {% endif %}
-                        {% endfor %}
-                 {% endif %}
-             {% endfor %}
+
+
+
+                             </td>
+                        {% endif %}
+
+                    {% endfor %}
+
+                </tr>
             </table>
-               <br>
-             {%  endfor %}
+             <br>
+         {%  endfor %}
+
     {% endfor %}
 
 
 {% endblock %}
 
 
-<table>
-  <tr>
-    <th rowspan="12"></th>
-    <th colspan="2"></th>
-    <th colspan="2"></th>
-    <th colspan="2"></th>
-    <th colspan="2"></th>
-    <th colspan="2"></th>
-  </tr>
-  <tr>
-    <td colspan="2"></td>
-    <td colspan="2"></td>
-    <td colspan="2"></td>
-    <td colspan="2"></td>
-    <td colspan="2"></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-</table>
