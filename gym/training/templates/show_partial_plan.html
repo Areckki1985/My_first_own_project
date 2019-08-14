@@ -9,7 +9,11 @@
         <ul>
             <li>
                 <font style="font-style: italic"> {{ exercise.name }}</font>
+                {% if exercise.movie_link is not null %}
                  <a href="{{ exercise.movie_link }}" target="_blank">Link do filmu</a>   <br>
+                    {% else %}
+                    <br>
+                {% endif %}
                 <font size="+1"> Opis: {{ exercise.description }}</font> <br>
             </li>
         </ul> <br>
