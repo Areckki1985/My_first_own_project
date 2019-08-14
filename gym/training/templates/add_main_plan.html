@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block b %}
+    {% if form %}
+    <form action="/add_main_plan/" method="post">
+<div style="color: darkorange; font-weight: bolder; font-size: 20px">
+    {% csrf_token %}
+    {{ form.as_p }} <br>
+    <input type="submit" value="Dodaj Plan"> <br>
+    <input type="button" value="Dodaj Plany Cząstkowe" onclick="location.href='/add_partial_plan/{{ main_plan.id }}'"> <br>
+    <input type="button" value="Pokaż wszystkie plany" onclick="location.href='/show_all_plans/'"> <br>
+    <input type="button" value="Powrót do Strony Głównej" onclick="location.href='/'"><br>
+  </form>
+    {% endif %}
+</div>
+<br>
+
+
+{% endblock %}

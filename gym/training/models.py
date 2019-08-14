@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 CHOICES = (
     (1, "Główne"),
@@ -19,13 +20,13 @@ DAY_NAMES = (
 class Series(models.Model):
     reps = models.IntegerField(null=True)
     load = models.IntegerField(null=True)
-    week = models.ForeignKey('Week', on_delete=models.DO_NOTHING)
+    week = models.ForeignKey('Week', on_delete=models.CASCADE)
 
 class Week(models.Model):
     name = models.CharField(max_length=10)
     how_many_series = models.IntegerField(null=True)
-    exercise = models.ForeignKey('GymExercise', on_delete=models.DO_NOTHING)
-    partial_plan = models.ForeignKey('PartialPlan', on_delete=models.DO_NOTHING)
+    exercise = models.ForeignKey('GymExercise', on_delete=models.CASCADE)
+    partial_plan = models.ForeignKey('PartialPlan', on_delete=models.CASCADE)
 
 class GymExercise(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -33,6 +34,7 @@ class GymExercise(models.Model):
     type = models.CharField(max_length=1, choices=CHOICES, default=1)
     created = models.DateField(auto_now_add=True)
     updated = models.DateField(auto_now=True)
+    movie_link = models.TextField(null=True)
 
     def __str__(self):
         return self.name
@@ -41,6 +43,7 @@ class MainPlan(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True)
     created = models.DateField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -48,10 +51,17 @@ class MainPlan(models.Model):
 class PartialPlan(models.Model):
     name = models.CharField(max_length=255)
     exercises = models.ManyToManyField(GymExercise)
-    main_plan = models.ForeignKey(MainPlan, on_delete=models.DO_NOTHING)
+    main_plan = models.ForeignKey(MainPlan, on_delete=models.CASCADE)
+
 
     def __str__(self):
         return self.name
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    is_coach = models.BooleanField(default=True)
+
 
 
 

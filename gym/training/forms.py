@@ -1,5 +1,7 @@
 from django import forms
-from training.models import Series, Week, GymExercise, MainPlan, PartialPlan, CHOICES
+from training.models import GymExercise, CHOICES
+
+from django.contrib.auth.models import User
 
 
 class AddGymExerciseForm(forms.Form):
@@ -10,17 +12,19 @@ class AddGymExerciseForm(forms.Form):
 class AddMainPlanForm(forms.Form):
     name = forms.CharField(label="Nazwa", max_length=255)
     description = forms.CharField(label="Opis", widget=forms.Textarea)
+    user = forms.ModelChoiceField(label="Kursant", widget=forms.Select, queryset=User.objects.all())
 
 class AddPartialPlanForm(forms.Form):
-    name = forms.CharField(label="Nazwa", max_length=255)
+    name = forms.CharField(label="Nazwa Planu Cząstkowego", max_length=255)
     exercises = forms.ModelMultipleChoiceField(label="Ćwiczenia", widget=forms.CheckboxSelectMultiple, queryset=GymExercise.objects.all())
-    main_plan = forms.ModelChoiceField(label="Plan", queryset=MainPlan.objects.all())
+
 
 class AddWeekForm(forms.Form):
     name = forms.CharField(label="Tydzień", max_length=10)
     how_many_series = forms.IntegerField(label="Ile Serii")
 
-# class AddSeriesForm(forms.Form):
-#     reps = forms.IntegerField()
-#     load = forms.IntegerField()
+class AddExercisesToPartialPlanForm(forms.Form):
+
+    exercises = forms.ModelMultipleChoiceField(label="Ćwiczenia", widget=forms.CheckboxSelectMultiple, queryset=GymExercise.objects.all())
+
 

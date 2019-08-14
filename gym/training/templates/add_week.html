@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block b %}
+    {% if form %}
+
+<div style="color: darkorange; font-size: 20px; font-style: italic">
+
+        Dodajesz Obciążenie do planu: <strong>"{{ main_plan.name }}" </strong>  i planu cząstkowego: <strong>"{{ partial_plan.name }}" </strong> .
+        Edytujesz ćwiczenie: <font size="+2"; style="font-style: italic; text-decoration: underline"> {{ exercise.name }} </font><br><br>
+
+</div>
+<div style="color: darkorange; font-weight: bolder; font-size: 15px">
+        <form action="/add_week/{{ plan_id }}/{{ exercise_id }}/{{ partial_plan_id }}/" method="post">
+
+
+
+            {% csrf_token %}
+                {{ form }} <br><br>
+
+                    {% for i in range %}
+                        Reps: <input type="number" name="{{ i }}">
+                        Load: <input type="number" name="second{{ i }}"> <br><br>
+                    {% endfor %}
+
+                <input type="submit" value="Wyślij">
+
+        </form>
+
+    {% endif %}
+<br>
+
+</div>
+{% endblock %}

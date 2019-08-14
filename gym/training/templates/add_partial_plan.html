@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block b %}
+    {% if form %}
+<div style="color: darkorange; font-weight: bolder; font-size: 20px">
+    <form action="/add_partial_plan/{{ id }}/" method="post">
+    {% csrf_token %}
+    {{ form.as_p }} <br>
+    <input type="submit" value="Dodaj plan cząstkowy do planu głównego"> <br>
+        {% if id %}
+            <input type="button" value="Przejdź do Planu" onclick="location.href='/show_plan/{{ id }}/'">
+            {% else %}
+            {{ pass }}
+            {% endif %}
+
+
+  </form>
+    {% endif %}
+<br>
+</div>
+
+{% endblock %}

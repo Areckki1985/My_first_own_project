@@ -1,10 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block b %}
+    <form action="/show_all_plans/" method="post">
+    <input type="button" value="Powrót do Strony Głównej" onclick="location.href='/'">
+    {% csrf_token %}
+<div style="color: darkorange; font-weight: bolder; font-size: 20px">
+    {% for element in main_plans %}
+        {% if user.id == element.user_id or user.profile.is_coach == True%}
+    <ul><li>{{ element.name }} <input type="button" value="Szczegóły" onclick="location.href='/show_plan/{{ element.id }}'">
+        {% if  user.profile.is_coach == True %}
+        <button type="submit" name="Delete" value="{{ element.id }} ">Usuń</button> </li></ul><br>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+</div>
+  </form>
+
+<br>
+
+
+{% endblock %}

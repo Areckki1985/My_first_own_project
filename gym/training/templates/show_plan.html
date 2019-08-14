@@ -1,17 +1,35 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block b %}
-<br>
-    <font size="+2">{{ plan }}</font> <br><br>
-
+<div style="color: darkorange; font-weight: bolder; font-size: 20px">
+    <br>
+    <input type="button" value="Powrót do Wszystkich Planów" onclick="location.href='/show_all_plans/'"> <br><br>
+    Nazwa Planu: <font size="+2"; style="font-style: italic; text-decoration: underline">"{{ plan }}" </font> <br><br>
+    {% if  user.profile.is_coach == True %}
+    <input type="button" value="Dodaj Plany Cząstkowe do Planu Głównego" onclick="location.href='/add_partial_plan/{{ plan.id }}'"> <br><br>
+    {% endif %}
      {% for partial_plan in partial_plans %}
 
+    <form action="/show_plan/{{ plan.id }}/" method="post">
+         {% csrf_token %}
+         <font size="+1"> {{ partial_plan.name }} </font>
 
-       <strong> {{ partial_plan.name }} </strong>  <br><br>
+         {% if  user.profile.is_coach == True %}
+            <button type="submit" name="Delete" value="{{ partial_plan.id }} ">Usuń</button>
+             <input type="button" value="Szczegóły Planu" onclick="location.href='/show_partial_plan/{{ partial_plan.id }}/'">
+            <input type="button" value="Dodaj Ćwiczenia do Planu" onclick="location.href='/add_exercises_partial_plan/{{ partial_plan.id }}/'"> <br><br>
+         {% else %}
+             <input type="button" value="Szczegóły Planu" onclick="location.href='/show_partial_plan/{{ partial_plan.id }}/'">
+         {% endif %}
+
          {% for exercise in partial_plan.exercises.all %}
-            <table border="3">
+            <table border="1" bgcolor="white">
                 <tr>
-                    <td><a href="/add_week/{{ plan.id }}/{{ exercise.id }}/{{ partial_plan.id }} ">{{ exercise.name }}</a> </td>
+                {% if  user.profile.is_coach == True %}
+                    <td><a href="/add_week/{{ plan.id }}/{{ exercise.id }}/{{ partial_plan.id }} "><font color="#00008b"; size="3px">{{ exercise.name }}</font></a> </td>
+                {% else %}
+                    <td><font color="#00008b"; size="3px"> {{ exercise.name }} </font></td>
+                {% endif %}
 
                     {% for week in weeks %}
 
@@ -19,19 +37,21 @@
                          {% if week.exercise_id == exercise.id and week.partial_plan_id == partial_plan.id %}
                              <td>
 
+                                <table>
+                                    <tr>
+                                    <td colspan="2"><font color="#00008b"; size="3px">{{ week.name }}</font></td>
+                                    </tr>
+                                    <td colspan="2"> <font color="#00008b"; size="3px">Range: {{ week.how_many_series }}</font> </td>
+                                        <tr>
+                                            {% for series in series %}
+                                                {% if series.week_id == week.id %}
+                                                    <td> <font size="3">Powtórzenia: {{ series.reps }}</font> || </td>
+                                                    <td> <font size="3">Obciążenie: {{ series.load }}</ </td>
+                                                {% endif %}
+                                                </tr>
+                                            {% endfor %}
 
-
-
-                                <strong>{{ week.name }}</strong>
-                                Ilość Serii: {{ week.how_many_series }}
-                                 {% for series in series %}
-                                    {% if series.week_id == week.id %}
-                                        Ilość powtórzeń: {{ series.reps }}
-                                        Obciążenie: {{ series.load }}
-                                    {% endif %}
-                                {% endfor %}
-
-
+                                </table>
 
 
 
@@ -46,8 +66,8 @@
          {%  endfor %}
 
     {% endfor %}
-
-
+    </form>
+</div>
 {% endblock %}
 
 

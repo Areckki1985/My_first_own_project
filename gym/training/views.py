@@ -1,16 +1,20 @@
-from training.forms import AddGymExerciseForm, AddMainPlanForm, AddPartialPlanForm, AddWeekForm
+from training.forms import AddGymExerciseForm, AddMainPlanForm, AddPartialPlanForm, AddWeekForm, AddExercisesToPartialPlanForm
 
-from django.http import HttpResponse
+
 from django.shortcuts import render, HttpResponseRedirect
 from django.views import View
-from training.models import Series, Week, GymExercise, MainPlan, PartialPlan, CHOICES
+from training.models import Series, Week, GymExercise, MainPlan, PartialPlan
+
+
+
+
 
 class AddGymExerciseView(View):
 
     def get(self, request):
         form = AddGymExerciseForm
 
-        return render(request, 'AddGymExercise.html', {'form': form})
+        return render(request, 'add_gym_exercise.html', {'form': form})
 
     def post(self, request):
         form = AddGymExerciseForm(request.POST)
@@ -22,15 +26,15 @@ class AddGymExerciseView(View):
 
             try:
                 GymExercise.objects.create(name=name, description=description, type=type)
-                return render(request, 'AddGymExercise.html', {'form': form, 'message': 'Dodano nowe ćwiczenie'})
+                return render(request, 'add_gym_exercise.html', {'form': form, 'message': 'Dodano nowe ćwiczenie'})
             except:
-                return render(request, 'AddGymExercise.html', {'form': form, 'message': 'Takie Ćwiczenie jest już w bazie'})
+                return render(request, 'add_gym_exercise.html', {'form': form, 'message': 'Takie Ćwiczenie jest już w bazie'})
 
 class AddMainPlanView(View):
     def get(self, request):
         form = AddMainPlanForm()
 
-        return render(request, 'AddMainPlan.html', {'form': form})
+        return render(request, 'add_main_plan.html', {'form': form})
 
     def post(self, request):
         form = AddMainPlanForm(request.POST)
@@ -38,23 +42,29 @@ class AddMainPlanView(View):
         if form.is_valid():
             name = form.cleaned_data['name']
             description = form.cleaned_data['description']
-            MainPlan.objects.create(name=name, description=description)
-            return render(request, 'AddMainPlan.html', {'form': form})    # TODO - Dodać adres na przekierowanie - ma przekierowywać do dodawania ćwiczeń i tygodni do planu z tym ID
+            user = form.cleaned_data['user']
+            main_plan = MainPlan.objects.create(name=name, description=description, user_id=user.id)
+            return render(request, 'add_main_plan.html', {'form': form, 'main_plan':main_plan})
 
 class AddPartialPlanView(View):
-    def get(self, request):
-        print('AddPartialPlanView GET')
+    def get(self, request, id):
 
-        form = AddPartialPlanForm
-        return render(request, 'AddPartialPlan.html', {'form': form})
 
-    def post(self, request):
-        print('AddPartialPlanView POST')
+        if id:
+            main_plan = MainPlan.objects.get(id=id)
+            form = AddPartialPlanForm
+            return render(request, 'add_partial_plan.html', {'form': form, 'id':main_plan.id})
+        else:
+            return HttpResponseRedirect('/add_main_plan/')
+
+    def post(self, request, id):
+
 
         form = AddPartialPlanForm(request.POST)
         if form.is_valid():
             name = form.cleaned_data['name']
-            main_plan = form.cleaned_data['main_plan']
+            main_plan = MainPlan.objects.get(id=id)
+            # main_plan = form.cleaned_data['main_plan']
             exercises = form.cleaned_data['exercises']
 
             new_partial_plan = PartialPlan.objects.create(name=name, main_plan=main_plan)
@@ -62,21 +72,68 @@ class AddPartialPlanView(View):
             for exercise in exercises:
                 new_partial_plan.exercises.add(exercise)
 
-            return render(request, 'AddPartialPlan.html', {'form': form})
+            return render(request, 'add_partial_plan.html', {'form': form, 'id':main_plan.id})
+
+class ShowPartialPlanView(View):
+    def get(self, request, id):
+
+        partial_plan = PartialPlan.objects.get(id=id)
+
+        return render(request, 'show_partial_plan.html', {'partial_plan': partial_plan})
+
+    def post(self, request, id):
+
+        partial_plan = PartialPlan.objects.get(id=id)
+        exercise_id = request.POST.get('Delete')
+        if exercise_id:
+
+            partial_plan.exercises.remove(GymExercise.objects.get(id=exercise_id))
+            partial_plan.save()
+
+
+
+        return render(request, 'show_partial_plan.html', {'partial_plan': partial_plan})
+
+class AddExercisesToPartialPlanView(View):
+    def get(self, request, id):
+
+        form = AddExercisesToPartialPlanForm
+
+        return render(request, 'add_exercises_to_partial_plan.html', {'form': form, 'id':id})
+
+    def post(self, request, id):
+
+        form = AddExercisesToPartialPlanForm(request.POST)
+        partial_plan = PartialPlan.objects.get(id=id)
+
+        if form.is_valid():
+            exercises = form.cleaned_data['exercises']
+
+            for exercise in exercises:
+                partial_plan.exercises.add(exercise)
+            partial_plan.save()
+
+
+        return render(request, 'add_exercises_to_partial_plan.html', {'form': form, 'id':id})
+
 
 
 class AddWeekView(View):
     def get(self, request, plan_id, exercise_id, partial_plan_id):
-        print('AddWeekView GET')
+
 
         form = AddWeekForm()
 
+        main_plan = MainPlan.objects.get(id=plan_id)
+        exercise = GymExercise.objects.get(id=exercise_id)
+        partial_plan = PartialPlan.objects.get(id=partial_plan_id)
 
 
-        return render(request, 'AddWeek.html', {'form': form, 'exercise_id':exercise_id, 'plan_id':plan_id, 'partial_plan_id':partial_plan_id, "range":range(10)})
+        return render(request, 'add_week.html', {'form': form, 'exercise_id':exercise_id, 'plan_id':plan_id, 'partial_plan_id':partial_plan_id, "range":range(10),
+                                                'main_plan':main_plan, 'exercise':exercise, 'partial_plan':partial_plan})
 
     def post(self, request, plan_id, exercise_id, partial_plan_id):
-        print('AddWeekView POST')
+
 
         form = AddWeekForm(request.POST)
 
@@ -165,7 +222,7 @@ class AddWeekView(View):
 
 class ShowMainPlanView(View):
     def get(self, request, id):
-        print('ShowMainPlanView GET')
+
         plan = MainPlan.objects.get(id=id)
         partial_plans = PartialPlan.objects.filter(main_plan_id=plan.id)
 
@@ -174,6 +231,64 @@ class ShowMainPlanView(View):
         context = {"plan":plan, "partial_plans": partial_plans, "weeks": weeks, "series":series}
 
         return render(request, 'show_plan.html', context)
+
+    def post(self, request, id):
+
+        partial_plan_id = request.POST.get('Delete')
+
+        if partial_plan_id:
+            PartialPlan.objects.get(id=partial_plan_id).delete()
+
+        plan = MainPlan.objects.get(id=id)
+        partial_plans = PartialPlan.objects.filter(main_plan_id=plan.id)
+        weeks = Week.objects.all()
+        series = Series.objects.all()
+        context = {"plan": plan, "partial_plans": partial_plans, "weeks": weeks, "series": series}
+
+        return render(request, 'show_plan.html', context)
+
+
+class ShowAllPlansView(View):
+    def get(self, request):
+
+        main_plans = MainPlan.objects.all()
+
+        return render(request, 'show_all_plans.html', {'main_plans': main_plans})
+
+    def post(self, request):
+
+        main_plan_id = request.POST.get('Delete')
+        main_plan = MainPlan.objects.get(id=main_plan_id)
+
+        if main_plan_id:
+            main_plan.delete()
+
+
+        main_plans = MainPlan.objects.all()
+
+        return render(request, 'show_all_plans.html', {'main_plans': main_plans})
+
+class ShowAllGymExercisesView(View):
+    def get(self, request):
+
+        gym_exercises = GymExercise.objects.all()
+
+        return render(request, 'show_all_exercises.html', {'gym_exercises': gym_exercises})
+
+    def post(self, request):
+
+        exercise_id = request.POST.get('Delete')
+        gym_exercise = GymExercise.objects.get(id=exercise_id)
+
+        if exercise_id:
+            gym_exercise.delete()
+
+        gym_exercises = GymExercise.objects.all()
+
+        return render(request, 'show_all_exercises.html', {'gym_exercises': gym_exercises})
+
+
+
 
 
 

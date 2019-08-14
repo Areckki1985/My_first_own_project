@@ -1,10 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block b %}
+
+<div style="color: darkorange; font-weight: bolder; font-size: 20px">
+    <form action="/show_all_exercises/" method="post">
+    <input type="button" value="Powrót do Strony Głównej" onclick="location.href='/'">
+    <input type="button" value="Dodaj Ćwiczenia do Bazy Danych" onclick="location.href='/add_exercise/'"><br>
+    {% csrf_token %}
+    {% for element in gym_exercises %}
+        <ul><li>{{ element.name }}
+{#        <input type="button" value="Szczegóły" onclick="location.href='/show_plan/{{ element.id }}'">#}
+        <button type="submit" name="Delete" value="{{ element.id }} ">Usuń</button> <br></li></ul>
+
+    {% endfor %}
+
+  </form>
+</div>
+<br>
+
+
+{% endblock %}

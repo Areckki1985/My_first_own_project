@@ -1,10 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block b %}
+
+<div style="color: darkorange; font-weight: bolder; font-size: 20px">
+    <form action="/show_partial_plan/{{ partial_plan.id }}/" method="post">
+    {% csrf_token %}
+    {% for exercise in partial_plan.exercises.all %}
+        <ul>
+            <li>
+                <font style="font-style: italic"> {{ exercise.name }}</font> <br>
+                <font size="+1"> Opis: {{ exercise.description }}</font> <br>
+            </li>
+        </ul> <br>
+        {% if  user.profile.is_coach == True %}
+            <button type="submit" name="Delete" value="{{ exercise.id }} ">Usuń</button>
+        {% endif %}
+    {% endfor %}
+
+  </form>
+</div>
+<br>
+
+
+{% endblock %}

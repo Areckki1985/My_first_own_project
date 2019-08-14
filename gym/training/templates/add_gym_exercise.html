@@ -1,0 +1,21 @@
+
+{% extends 'base.html' %}
+
+{% block b %}
+    {% if form %}
+    <form action="/add_exercise/" method="post">
+
+    {% csrf_token %}
+<div style="color: darkorange; font-weight: bolder; font-size: 20px">
+    {{ form.as_p }} <br>
+
+    <input type="submit" value="Dodaj Ćwiczenie do Bazy Danych">
+    <input type="button" value="Wszystkie Ćwiczenia" onclick="location.href='/show_all_exercises/'">
+</>
+  </form>
+    {% endif %}
+<br>
+    {{ message }}
+
+{% endblock %}
+

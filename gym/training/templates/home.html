@@ -1,10 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+
+
+
+
+{% block b %}
+
+
+{% load static %}
+
+
+<div>
+{% if user.is_authenticated %}
+    {% if user.profile.is_coach == True and user.is_authenticated %}
+        <input style="position: absolute; left: 100px; bottom: 850px" type="button" value="Dodaj Ćwiczenia do Bazy Danych" onclick="location.href='/add_exercise/'"><br>
+        <input style="position: absolute; left: 100px; bottom: 800px" type="button" value="Ćwiczenia" onclick="location.href='/show_all_exercises/'"><br>
+        <input style="position: absolute; left: 100px; bottom: 750px" type="button" value="Dodaj Plan" onclick="location.href='/add_main_plan/'"><br>
+    {% endif %}
+    <input style="position: absolute; left: 100px; bottom: 700px" type="button" value="Pokaż Plany" onclick="location.href='/show_all_plans/'">
+{% endif %}
+</div>
+
+
+
+{% endblock %}
+
