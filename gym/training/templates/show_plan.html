@@ -5,31 +5,31 @@
     <br>
     <input type="button" value="Powrót do Wszystkich Planów" onclick="location.href='/show_all_plans/'"> <br><br>
     Nazwa Planu: <font size="+2"; style="font-style: italic; text-decoration: underline">"{{ plan }}" </font> <br><br>
-    {% if  user.profile.is_coach == True %}
-    <input type="button" value="Dodaj Plany Cząstkowe do Planu Głównego" onclick="location.href='/add_partial_plan/{{ plan.id }}'"> <br><br>
-    {% endif %}
-     {% for partial_plan in partial_plans %}
+        {% if  user.profile.is_coach == True %}
+        <input type="button" value="Dodaj Plany Cząstkowe do Planu Głównego" onclick="location.href='/add_partial_plan/{{ plan.id }}'"> <br><br>
+        {% endif %}
+            {% for partial_plan in partial_plans %}
 
-    <form action="/show_plan/{{ plan.id }}/" method="post">
-         {% csrf_token %}
-         <font size="+1"> {{ partial_plan.name }} </font>
+                <form action="/show_plan/{{ plan.id }}/" method="post">
+                {% csrf_token %}
+                <font size="+1"> {{ partial_plan.name }} </font>
 
-         {% if  user.profile.is_coach == True %}
-            <button type="submit" name="Delete" value="{{ partial_plan.id }} ">Usuń</button>
-             <input type="button" value="Szczegóły Planu" onclick="location.href='/show_partial_plan/{{ partial_plan.id }}/'">
-            <input type="button" value="Dodaj Ćwiczenia do Planu" onclick="location.href='/add_exercises_partial_plan/{{ partial_plan.id }}/'"> <br><br>
-         {% else %}
-             <input type="button" value="Szczegóły Planu" onclick="location.href='/show_partial_plan/{{ partial_plan.id }}/'">
-         {% endif %}
+                    {% if  user.profile.is_coach == True %}
+                        <button type="submit" name="Delete" value="{{ partial_plan.id }} ">Usuń</button>
+                        <input type="button" value="Szczegóły Planu" onclick="location.href='/show_partial_plan/{{ partial_plan.id }}/'">
+                        <input type="button" value="Dodaj Ćwiczenia do Planu" onclick="location.href='/add_exercises_partial_plan/{{ partial_plan.id }}/'"> <br><br>
+                    {% else %}
+                        <input type="button" value="Szczegóły Planu" onclick="location.href='/show_partial_plan/{{ partial_plan.id }}/'">
+                    {% endif %}
 
-         {% for exercise in partial_plan.exercises.all %}
-            <table border="1" bgcolor="white">
-                <tr>
-                {% if  user.profile.is_coach == True %}
-                    <td><a href="/add_week/{{ plan.id }}/{{ exercise.id }}/{{ partial_plan.id }} "><font color="#00008b"; size="3px">{{ exercise.name }}</font></a> </td>
-                {% else %}
-                    <td><font color="#00008b"; size="3px"> {{ exercise.name }} </font></td>
-                {% endif %}
+                {% for exercise in partial_plan.exercises.all %}
+                    <table border="1" bgcolor="white">
+                    <tr>
+                        {% if  user.profile.is_coach == True %}
+                        <td><a href="/add_week/{{ plan.id }}/{{ exercise.id }}/{{ partial_plan.id }} "><font color="#00008b"; size="3px">{{ exercise.name }}</font></a> </td>
+                        {% else %}
+                         <td><font color="#00008b"; size="3px"> {{ exercise.name }} </font></td>
+                        {% endif %}
 
                     {% for week in weeks %}
 
@@ -60,12 +60,12 @@
 
                     {% endfor %}
 
-                </tr>
-            </table>
-             <br>
-         {%  endfor %}
+                        </tr>
+                        </table>
+                    <br>
+                {%  endfor %}
 
-    {% endfor %}
+            {% endfor %}
     </form>
 </div>
 {% endblock %}
